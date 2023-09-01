@@ -23,4 +23,13 @@
 hs_err_pid*
 replay_pid*
 
+/target/
+*/target/**
+**/META-INF/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
