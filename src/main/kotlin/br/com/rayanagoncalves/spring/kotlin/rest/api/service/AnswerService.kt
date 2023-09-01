@@ -57,6 +57,8 @@ class AnswerService(private var answers: List<Answer>) {
     }
 
     fun list(id: Long): List<Answer> {
-        return answers.stream().filter{answer -> answer.topic.id == id}.toList()
+        return answers.stream()
+            .filter{answer -> answer.topic.id == id}
+            .toList()
     }
 }
