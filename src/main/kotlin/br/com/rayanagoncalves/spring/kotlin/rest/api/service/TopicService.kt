@@ -16,11 +16,15 @@ class TopicService(
         return topics.stream().map { topic -> topic.mapper() }.toList()
     }
 
-    fun findById(id: Long): TopicResponse {
+    fun findTopicResponseById(id: Long): TopicResponse {
         val topic = topics.stream().filter{ topic -> topic.id == id }
             .findFirst().get()
 
         return topic.mapper()
+    }
+
+    fun findTopicById(id: Long): Topic {
+        return topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
     }
 
     fun register(dto: NewTopicRequest) {

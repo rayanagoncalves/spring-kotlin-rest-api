@@ -17,7 +17,7 @@ class TopicController(private val topicService: TopicService) {
 
     @GetMapping("/{id}")
     fun findById(@PathVariable id: Long): TopicResponse {
-        return topicService.findById(id)
+        return topicService.findTopicResponseById(id)
     }
 
     @PostMapping
