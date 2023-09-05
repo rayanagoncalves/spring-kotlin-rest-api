@@ -2,16 +2,12 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
-import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicRequestMapper
-import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicResponseMapper
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import org.springframework.stereotype.Service
 
 @Service
 class TopicService(
     private var topics: List<Topic> = ArrayList(),
-    private val topicResponseMapper: TopicResponseMapper,
-    private val topicRequestMapper: TopicRequestMapper,
     private val courseService: CourseService,
     private val userService: UserService,
 ) {
