@@ -3,7 +3,7 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.model
 import java.time.LocalDateTime
 
 data class Topic(
-    val id: Long? = null,
+    var id: Long? = null,
     val title: String,
     val message: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
