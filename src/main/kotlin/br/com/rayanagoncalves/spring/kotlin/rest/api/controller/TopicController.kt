@@ -3,6 +3,7 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.controller
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,7 +21,7 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @PostMapping
-    fun cadastrar(@RequestBody topic: NewTopicRequest) {
+    fun cadastrar(@RequestBody @Valid topic: NewTopicRequest) {
         topicService.register(topic)
     }
 
