@@ -1,5 +1,6 @@
 package br.com.rayanagoncalves.spring.kotlin.rest.api.controller
 
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicDto
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
 import org.springframework.web.bind.annotation.*
@@ -19,8 +20,8 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @PostMapping
-    fun cadastrar(@RequestBody topic: Topic): Void {
-        topicService.cadastrar(topic)
+    fun cadastrar(@RequestBody topic: NewTopicDto) {
+        topicService.register(topic)
     }
 
 }
