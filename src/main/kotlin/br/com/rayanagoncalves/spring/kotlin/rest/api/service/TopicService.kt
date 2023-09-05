@@ -1,6 +1,7 @@
 package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 
-import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicDto
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import org.springframework.stereotype.Service
 
@@ -11,16 +12,30 @@ class TopicService(
     private val userService: UserService
 ) {
 
-    fun list(): List<Topic> {
-        return this.topics
+    fun list(): List<TopicResponse> {
+        return topics.stream().map { topic -> TopicResponse(
+            id = topic.id,
+            title = topic.title,
+            message = topic.message,
+            createdAt = topic.createdAt,
+            status = topic.topicStatus
+        ) }.toList()
     }
 
-    fun findById(id: Long): Topic {
-        return this.topics.stream().filter{ topic -> topic.id == id }
+    fun findById(id: Long): TopicResponse {
+        val topic = topics.stream().filter{ topic -> topic.id == id }
             .findFirst().get()
+
+        return TopicResponse(
+            id = topic.id,
+            title = topic.title,
+            message = topic.message,
+            status = topic.topicStatus,
+            createdAt = topic.createdAt
+        )
     }
 
-    fun register(dto: NewTopicDto) {
+    fun register(dto: NewTopicRequest) {
         topics = topics.plus(Topic(
             id = topics.size.toLong() + 1,
             title = dto.title,
