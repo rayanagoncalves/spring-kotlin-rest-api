@@ -3,6 +3,7 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicResponseMapper
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import org.springframework.stereotype.Service
 
@@ -11,6 +12,7 @@ class TopicService(
     private var topics: List<Topic> = ArrayList(),
     private val courseService: CourseService,
     private val userService: UserService,
+    private val topicResponseMapper: TopicResponseMapper
 ) {
 
     fun list(): List<TopicResponse> {
@@ -28,15 +30,17 @@ class TopicService(
         return topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
     }
 
-    fun register(dto: NewTopicRequest) {
+    fun register(dto: NewTopicRequest): TopicResponse {
         val topic = dto.mapper()
         topic.id = topics.size.toLong() + 1
         topics = topics.plus(topic)
+
+        return topicResponseMapper.map(topic)
     }
 
-    fun update(id: Long, updateTopicRequest: UpdateTopicRequest) {
+    fun update(id: Long, updateTopicRequest: UpdateTopicRequest): TopicResponse {
         val topic = topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
-        topics = topics.minus(topic).plus(Topic(
+        val updatedTopic = Topic(
             id = id,
             title = updateTopicRequest.title,
             message = updateTopicRequest.message,
@@ -45,8 +49,15 @@ class TopicService(
             answers = topic.answers,
             topicStatus = topic.topicStatus,
             createdAt = topic.createdAt
-        ))
+        )
+        topics = topics.minus(topic).plus(updatedTopic)
 
+        return topicResponseMapper.map(updatedTopic)
+    }
+
+    fun delete(id: Long) {
+        val topic = topics.stream().filter{ topic -> topic.id == id}.findFirst().get()
+        topics = topics.minus(topic)
     }
 
     fun NewTopicRequest.mapper(): Topic {

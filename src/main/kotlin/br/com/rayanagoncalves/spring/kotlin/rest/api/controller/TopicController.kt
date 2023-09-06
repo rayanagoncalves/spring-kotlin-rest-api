@@ -5,7 +5,10 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping("/topics")
@@ -22,13 +25,25 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @PostMapping
-    fun register(@RequestBody @Valid topic: NewTopicRequest) {
-        topicService.register(topic)
+    fun register(
+        @RequestBody @Valid topic: NewTopicRequest,
+        uriBuilder: UriComponentsBuilder): ResponseEntity<TopicResponse> {
+        val topicResponse = topicService.register(topic)
+        val uri = uriBuilder.path("/topic/$topicResponse.id").build().toUri()
+
+        return ResponseEntity.created(uri).body(topicResponse)
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody @Valid topic: UpdateTopicRequest) {
-        topicService.update(id, topic)
+    fun update(@PathVariable id: Long, @RequestBody @Valid topic: UpdateTopicRequest): ResponseEntity<TopicResponse> {
+        val topicResponse = topicService.update(id, topic)
+
+        return ResponseEntity.ok(topicResponse)
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun delete(@PathVariable id: Long) {
+        topicService.delete(id)
+    }
 }
