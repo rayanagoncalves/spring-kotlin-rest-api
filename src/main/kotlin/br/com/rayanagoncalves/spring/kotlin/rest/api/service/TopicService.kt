@@ -2,6 +2,7 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import org.springframework.stereotype.Service
 
@@ -31,6 +32,21 @@ class TopicService(
         val topic = dto.mapper()
         topic.id = topics.size.toLong() + 1
         topics = topics.plus(topic)
+    }
+
+    fun update(id: Long, updateTopicRequest: UpdateTopicRequest) {
+        val topic = topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
+        topics = topics.minus(topic).plus(Topic(
+            id = id,
+            title = updateTopicRequest.title,
+            message = updateTopicRequest.message,
+            author = topic.author,
+            course = topic.course,
+            answers = topic.answers,
+            topicStatus = topic.topicStatus,
+            createdAt = topic.createdAt
+        ))
+
     }
 
     fun NewTopicRequest.mapper(): Topic {
