@@ -47,8 +47,8 @@ class ExceptionHandler {
             error -> errorMessage.put(error.field, error.defaultMessage)
         }
         return ErrorResponse(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            error = HttpStatus.INTERNAL_SERVER_ERROR.name,
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.name,
             message = errorMessage.toString(),
             path = request.servletPath
         )
