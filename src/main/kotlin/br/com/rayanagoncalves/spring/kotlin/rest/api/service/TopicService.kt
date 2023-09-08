@@ -6,11 +6,12 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.exception.NotFoundException
 import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicResponseMapper
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
+import br.com.rayanagoncalves.spring.kotlin.rest.api.repository.TopicRepository
 import org.springframework.stereotype.Service
 
 @Service
 class TopicService(
-    private var topics: List<Topic> = ArrayList(),
+    private val repository: TopicRepository,
     private val courseService: CourseService,
     private val userService: UserService,
     private val topicResponseMapper: TopicResponseMapper,
@@ -18,11 +19,11 @@ class TopicService(
 ) {
 
     fun list(): List<TopicResponse> {
-        return topics.stream().map { topic -> topic.mapper() }.toList()
+        return repository.findAll().stream().map { topic -> topic.mapper() }.toList()
     }
 
     fun findTopicById(id: Long): Topic {
-        return topics.stream().filter{ topic -> topic.id == id }.findFirst().orElseThrow{NotFoundException(notFoundMessage)}
+        return repository.findById(id).orElseThrow{NotFoundException(notFoundMessage)}
     }
 
     fun findTopicResponseById(id: Long): TopicResponse {
@@ -33,32 +34,21 @@ class TopicService(
 
     fun register(dto: NewTopicRequest): TopicResponse {
         val topic = dto.mapper()
-        topic.id = topics.size.toLong() + 1
-        topics = topics.plus(topic)
+        repository.save(topic)
 
         return topicResponseMapper.map(topic)
     }
 
     fun update(id: Long, updateTopicRequest: UpdateTopicRequest): TopicResponse {
         val topic = findTopicById(id)
-        val updatedTopic = Topic(
-            id = id,
-            title = updateTopicRequest.title,
-            message = updateTopicRequest.message,
-            author = topic.author,
-            course = topic.course,
-            answers = topic.answers,
-            topicStatus = topic.topicStatus,
-            createdAt = topic.createdAt
-        )
-        topics = topics.minus(topic).plus(updatedTopic)
+        topic.title = updateTopicRequest.title
+        topic.message = updateTopicRequest.message
 
-        return topicResponseMapper.map(updatedTopic)
+        return topicResponseMapper.map(topic)
     }
 
     fun delete(id: Long) {
-        val topic = findTopicById(id)
-        topics = topics.minus(topic)
+        repository.deleteById(id)
     }
 
     fun NewTopicRequest.mapper(): Topic {

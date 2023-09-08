@@ -4,6 +4,7 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,6 +26,7 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @PostMapping
+    @Transactional
     fun register(
         @RequestBody @Valid topic: NewTopicRequest,
         uriBuilder: UriComponentsBuilder): ResponseEntity<TopicResponse> {
@@ -35,6 +37,7 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     fun update(@PathVariable id: Long, @RequestBody @Valid topic: UpdateTopicRequest): ResponseEntity<TopicResponse> {
         val topicResponse = topicService.update(id, topic)
 
@@ -42,6 +45,7 @@ class TopicController(private val topicService: TopicService) {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: Long) {
         topicService.delete(id)

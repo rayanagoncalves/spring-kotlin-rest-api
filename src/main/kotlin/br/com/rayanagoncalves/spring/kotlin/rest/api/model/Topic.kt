@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 data class Topic(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    val title: String,
-    val message: String,
+    var title: String,
+    var message: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @ManyToOne
     val course: Course,
@@ -16,6 +16,6 @@ data class Topic(
     val author: User,
     @Enumerated(value = EnumType.STRING)
     val topicStatus: TopicStatus = TopicStatus.NOT_ANSWERED,
-    @OneToMany(mappedBy = "topico")
+    @OneToMany(mappedBy = "topic")
     val answers: List<Answer> = ArrayList()
 )
