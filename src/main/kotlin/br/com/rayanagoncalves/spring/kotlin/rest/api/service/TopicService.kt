@@ -3,6 +3,7 @@ package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.exception.NotFoundException
 import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicResponseMapper
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import org.springframework.stereotype.Service
@@ -12,22 +13,22 @@ class TopicService(
     private var topics: List<Topic> = ArrayList(),
     private val courseService: CourseService,
     private val userService: UserService,
-    private val topicResponseMapper: TopicResponseMapper
+    private val topicResponseMapper: TopicResponseMapper,
+    private val notFoundMessage: String = "Tópico não encontrado."
 ) {
 
     fun list(): List<TopicResponse> {
         return topics.stream().map { topic -> topic.mapper() }.toList()
     }
 
-    fun findTopicResponseById(id: Long): TopicResponse {
-        val topic = topics.stream().filter{ topic -> topic.id == id }
-            .findFirst().get()
-
-        return topic.mapper()
+    fun findTopicById(id: Long): Topic {
+        return topics.stream().filter{ topic -> topic.id == id }.findFirst().orElseThrow{NotFoundException(notFoundMessage)}
     }
 
-    fun findTopicById(id: Long): Topic {
-        return topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
+    fun findTopicResponseById(id: Long): TopicResponse {
+        val topic = findTopicById(id)
+
+        return topic.mapper()
     }
 
     fun register(dto: NewTopicRequest): TopicResponse {
@@ -39,7 +40,7 @@ class TopicService(
     }
 
     fun update(id: Long, updateTopicRequest: UpdateTopicRequest): TopicResponse {
-        val topic = topics.stream().filter{ topic -> topic.id == id }.findFirst().get()
+        val topic = findTopicById(id)
         val updatedTopic = Topic(
             id = id,
             title = updateTopicRequest.title,
@@ -56,7 +57,7 @@ class TopicService(
     }
 
     fun delete(id: Long) {
-        val topic = topics.stream().filter{ topic -> topic.id == id}.findFirst().get()
+        val topic = findTopicById(id)
         topics = topics.minus(topic)
     }
 
