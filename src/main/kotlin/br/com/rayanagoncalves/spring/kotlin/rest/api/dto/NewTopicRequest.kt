@@ -6,10 +6,11 @@ import jakarta.validation.constraints.Size
 
 
 data class NewTopicRequest(
-    @field:NotEmpty
-    @field:Size(min = 5, max = 100)
+    @field:NotEmpty(message = "Título não pode ser em branco")
+    @field:Size(min = 5, max = 100, message = "Título deve ter entre 5 e 100 caracteres")
     val title: String,
-    @field:NotEmpty val message: String,
+    @field:NotEmpty(message = "Mensagem não pode ser em branco")
+    val message: String,
     @field:NotNull val courseId: Long,
     @field:NotNull val authorId: Long
 )
