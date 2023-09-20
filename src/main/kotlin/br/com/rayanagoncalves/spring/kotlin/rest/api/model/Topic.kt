@@ -9,11 +9,13 @@ data class Topic(
     var id: Long? = null,
     var title: String,
     var message: String,
+    @Column(name = "created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
     @ManyToOne
     val course: Course,
     @ManyToOne
     val author: User,
+    @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     val topicStatus: TopicStatus = TopicStatus.NOT_ANSWERED,
     @OneToMany(mappedBy = "topic")
