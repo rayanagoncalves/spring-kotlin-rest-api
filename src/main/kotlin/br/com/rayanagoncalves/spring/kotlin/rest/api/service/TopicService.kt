@@ -7,6 +7,8 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.exception.NotFoundException
 import br.com.rayanagoncalves.spring.kotlin.rest.api.mapper.TopicResponseMapper
 import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import br.com.rayanagoncalves.spring.kotlin.rest.api.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,12 +20,18 @@ class TopicService(
     private val notFoundMessage: String = "Tópico não encontrado."
 ) {
 
-    fun list(): List<TopicResponse> {
-        return repository.findAll().stream().map { topic -> topic.mapper() }.toList()
+    fun list(courseName: String?, pageable: Pageable): Page<TopicResponse> {
+        val topics = if (courseName == null) {
+            repository.findAll(pageable)
+        } else
+            repository.findByCourseName(courseName, pageable)
+        return topics.map { topic ->
+            topic.mapper()
+        }
     }
 
     fun findTopicById(id: Long): Topic {
-        return repository.findById(id).orElseThrow{NotFoundException(notFoundMessage)}
+        return repository.findById(id).orElseThrow { NotFoundException(notFoundMessage) }
     }
 
     fun findTopicResponseById(id: Long): TopicResponse {

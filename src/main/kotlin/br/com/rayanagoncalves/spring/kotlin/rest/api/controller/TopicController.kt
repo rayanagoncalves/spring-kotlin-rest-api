@@ -6,6 +6,9 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,8 +19,10 @@ import org.springframework.web.util.UriComponentsBuilder
 class TopicController(private val topicService: TopicService) {
 
     @GetMapping
-    fun list(): List<TopicResponse> {
-        return topicService.list()
+    fun list(
+        @RequestParam(required = false) courseName: String?,
+        @PageableDefault(size = 5) pageable: Pageable): Page<TopicResponse> {
+        return topicService.list(courseName, pageable)
     }
 
     @GetMapping("/{id}")
