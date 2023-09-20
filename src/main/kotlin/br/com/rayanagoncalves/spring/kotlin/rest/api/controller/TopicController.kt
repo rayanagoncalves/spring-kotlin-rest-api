@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,7 +22,7 @@ class TopicController(private val topicService: TopicService) {
     @GetMapping
     fun list(
         @RequestParam(required = false) courseName: String?,
-        @PageableDefault(size = 5) pageable: Pageable): Page<TopicResponse> {
+        @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC ) pageable: Pageable): Page<TopicResponse> {
         return topicService.list(courseName, pageable)
     }
 
