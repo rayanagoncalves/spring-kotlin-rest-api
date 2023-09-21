@@ -1,6 +1,7 @@
 package br.com.rayanagoncalves.spring.kotlin.rest.api.service
 
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicByCategoryResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.exception.NotFoundException
@@ -76,5 +77,9 @@ class TopicService(
             status = this.topicStatus,
             createdAt = this.createdAt
         )
+    }
+
+    fun report(): List<TopicByCategoryResponse> {
+        return repository.report()
     }
 }

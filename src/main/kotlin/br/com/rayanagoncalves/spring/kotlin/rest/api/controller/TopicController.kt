@@ -1,6 +1,7 @@
 package br.com.rayanagoncalves.spring.kotlin.rest.api.controller
 
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicByCategoryResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
@@ -61,5 +62,10 @@ class TopicController(private val topicService: TopicService) {
     @CacheEvict(value = ["topics"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         topicService.delete(id)
+    }
+
+    @GetMapping("/report")
+    fun report(): List<TopicByCategoryResponse> {
+        return topicService.report()
     }
 }
