@@ -4,6 +4,7 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.NewTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicByCategoryResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.TopicResponse
 import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
+import br.com.rayanagoncalves.spring.kotlin.rest.api.model.Topic
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
@@ -64,8 +65,13 @@ class TopicController(private val topicService: TopicService) {
         topicService.delete(id)
     }
 
-    @GetMapping("/report")
-    fun report(): List<TopicByCategoryResponse> {
-        return topicService.report()
+    @GetMapping("/topicByCategoryReport")
+    fun topicByCategoryReport(): List<TopicByCategoryResponse> {
+        return topicService.topicByCategoryReport()
+    }
+
+    @GetMapping("/topicsNotAnsweredReport")
+    fun report(): List<Topic> {
+        return topicService.topicsNotAnsweredReport()
     }
 }

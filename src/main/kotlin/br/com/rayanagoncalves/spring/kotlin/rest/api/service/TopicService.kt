@@ -79,7 +79,11 @@ class TopicService(
         )
     }
 
-    fun report(): List<TopicByCategoryResponse> {
-        return repository.report()
+    fun topicByCategoryReport(): List<TopicByCategoryResponse> {
+        return repository.topicByCategoryReport()
+    }
+
+    fun topicsNotAnsweredReport(): List<Topic> {
+        return repository.topicsNotAnsweredReport()
     }
 }
