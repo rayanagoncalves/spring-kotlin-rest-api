@@ -6,6 +6,8 @@ import br.com.rayanagoncalves.spring.kotlin.rest.api.dto.UpdateTopicRequest
 import br.com.rayanagoncalves.spring.kotlin.rest.api.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -20,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder
 class TopicController(private val topicService: TopicService) {
 
     @GetMapping
+    @Cacheable("topics")
     fun list(
         @RequestParam(required = false) courseName: String?,
         @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC ) pageable: Pageable): Page<TopicResponse> {
@@ -33,6 +36,7 @@ class TopicController(private val topicService: TopicService) {
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun register(
         @RequestBody @Valid topic: NewTopicRequest,
         uriBuilder: UriComponentsBuilder): ResponseEntity<TopicResponse> {
@@ -44,6 +48,7 @@ class TopicController(private val topicService: TopicService) {
 
     @PutMapping("/{id}")
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun update(@PathVariable id: Long, @RequestBody @Valid topic: UpdateTopicRequest): ResponseEntity<TopicResponse> {
         val topicResponse = topicService.update(id, topic)
 
@@ -53,6 +58,7 @@ class TopicController(private val topicService: TopicService) {
     @DeleteMapping("/{id}")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         topicService.delete(id)
     }
