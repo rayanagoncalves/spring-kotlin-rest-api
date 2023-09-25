@@ -1,9 +1,7 @@
 package br.com.rayanagoncalves.spring.kotlin.rest.api.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.persistence.*
 
 @Entity
 data class User(
@@ -11,5 +9,10 @@ data class User(
     val id: Long? = null,
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_role")
+    val role: List<Role> = mutableListOf()
 )
